@@ -304,3 +304,92 @@ OpenCV框架是开源的，可免费商用的一个不错的框架
     <img src="OpenCV_Learn_Note_1.assets/image-20221211221548273.png" alt="image-20221211221548273" style="zoom:50%;" />
 
     注意：numpy的切片操作与list不同，如果是多维的，是在[]中间添加','分隔
+
+#### 4).图像像素的读写操作
+
+- 像素与分辨率
+
+    <img src="OpenCV_Learn_Note_1.assets/image-20221214221625988.png" alt="image-20221214221625988" style="zoom:50%;" />
+
+    > dpi:每英寸的点数目，主要针对打印
+    >
+    > ppi:每英寸的像素数目，主要针对图像
+
+- opencv中的像素
+
+    <img src="OpenCV_Learn_Note_1.assets/image-20221214222049715.png" alt="image-20221214222049715" style="zoom:50%;" />
+
+- 像素的访问与遍历
+
+    其实就是访问numpy数组
+
+    <img src="OpenCV_Learn_Note_1.assets/image-20221214222214286.png" alt="image-20221214222214286" style="zoom:50%;" />
+
+    
+
+    小练习：图像色彩反转
+
+    ```python
+    def image_inverse(path):
+        img = cv.imread(path)
+        cv.imshow('normal',img)
+        h, w, c = img.shape
+        for i in range(h):
+            for j in range(w):
+                b, g, r = img[i,j]
+                print(i,b,g,r)
+                img[i,j] = (255 - b, 255 - g, 255 - r)
+        cv.imshow('inverse',img)
+        cv.waitKey(0)
+        cv.destroyAllWindows()
+    ```
+
+    <img src="OpenCV_Learn_Note_1.assets/image-20221214225343547.png" alt="image-20221214225343547" style="zoom:50%;" />
+
+#### 5).图像的算数操作
+
+图像进行算法操作的前提：图像大小与通道数一致
+
+算数操作包括：加法、减法、乘法、除法；就是B/G/R对应的值的算数操作
+
+- 加法
+
+    <img src="OpenCV_Learn_Note_1.assets/image-20221214232558636.png" alt="image-20221214232558636" style="zoom:50%;" />
+
+- 减法
+
+    <img src="OpenCV_Learn_Note_1.assets/image-20221214232714721.png" alt="image-20221214232714721" style="zoom:50%;" />
+
+- 乘法
+
+    <img src="OpenCV_Learn_Note_1.assets/image-20221214232748596.png" alt="image-20221214232748596" style="zoom:50%;" />
+
+- 除法
+
+    <img src="OpenCV_Learn_Note_1.assets/image-20221214232853043.png" alt="image-20221214232853043" style="zoom:50%;" />
+
+
+
+opencv中已经集成好了响应的函数
+
+<img src="OpenCV_Learn_Note_1.assets/image-20221214233233212.png" alt="image-20221214233233212" style="zoom:50%;" />
+
+**mask参数**
+
+<img src="OpenCV_Learn_Note_1.assets/image-20221214233325094.png" alt="image-20221214233325094" style="zoom:50%;" />
+
+对mask中非0区域进行算数运算，0区域为mask中的值；通过设置不同的mask，就可以获取ROI区域(感兴趣区域 (**ROI**) )
+
+```python
+def image_calculate(path):
+    img = cv.imread(path)
+    cv.imshow('normal',img)
+    img1 = np.zeros_like(img)
+    mask = np.zeros_like(img)
+    mask[1000:3000,2000:4000] = 1
+    dst = cv.add(img,img1,mask=mask)
+    cv.imshow('add_mask',dst)
+    cv.waitKey(0)
+    cv.destroyAllWindows()
+```
+
